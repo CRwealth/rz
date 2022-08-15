@@ -1,12 +1,18 @@
 import { login } from '@/api/user'
+import { setToken, getToken, removeToken } from '@/utils//auth'
 export default {
   namespaced: true,
   state: {
-    token: null
+    token: getToken()
   },
   mutations: {
     setToken(state, token) {
       state.token = token
+      setToken(token)
+    },
+    removeToken(state) {
+      state.token = null
+      removeToken()
     }
   },
   actions: {

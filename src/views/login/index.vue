@@ -38,6 +38,7 @@
 
 <script>
 import { validMobile } from '@/utils/validate'
+
 export default {
   name: 'Login',
   data() {
@@ -107,9 +108,11 @@ export default {
         await this.$refs.loginForm.validate() // promise
         this.loading = true
         await this.$store.dispatch('user/login', this.loginForm)
+        this.$router.push('/')
       } catch (e) {
         console.log(e)
       } finally {
+        // finally不管成功或者失败都会触发
         this.loading = false
       }
     }
