@@ -25,7 +25,7 @@
         </span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" class="loginBtn" @click="login">登录</el-button>
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" class="loginBtn" :loading="loading" @click="login">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">账号: admin</span>
@@ -54,6 +54,7 @@ export default {
     }
     return {
       passwordType: 'password',
+      loading: false,
       loginForm: {
         mobile: '13800000002',
         password: '123456'
@@ -104,8 +105,12 @@ export default {
       // 第二种
       try {
         await this.$refs.loginForm.validate() // promise
+        this.loading = true
+        await this.$store.dispatch('user/login', this.loginForm)
       } catch (e) {
         console.log(e)
+      } finally {
+        this.loading = false
       }
     }
 
