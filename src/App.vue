@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
-  </div>
+    <!-- <router-view /> -->
+    <TextIndex />
+    <Text2index /></div>
 </template>
 
 <script>
