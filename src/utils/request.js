@@ -1,10 +1,24 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import store from '@/store'
 
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000 // request timeout
+})
+
+// 请求拦截器
+service.interceptors.request.use(config => {
+  // console.log(config)
+  // config.headers 加一个验证字段
+  // Authorization = Bearer+空格+token
+  if (store.getters.token) { // token存在
+    config.headers['Authorization'] = `Bearer ${store.getters.token}`
+  }
+  return config
+}, error => {
+  return Promise.reject(error)
 })
 
 // 响应拦截器
