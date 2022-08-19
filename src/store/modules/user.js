@@ -42,6 +42,10 @@ export default {
       // 直接log不出来，要去首页调用一下
       // console.log(res)
       commit('setUserInfo', baseResult)
+    },
+    logout({ commit }) {
+      commit('removeToken')
+      commit('removeUserInfo')
     }
   }
 }
