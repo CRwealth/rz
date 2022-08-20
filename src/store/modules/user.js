@@ -4,7 +4,8 @@ export default {
   namespaced: true,
   state: {
     token: getToken(),
-    userInfo: {} // 如果设置为null下面也要设置null而且还要在get里面做非空判断
+    userInfo: {}, // 如果设置为null下面也要设置null而且还要在get里面做非空判断
+    hrsaasTime: '' // 存储时间
   },
   mutations: {
     setToken(state, token) {
@@ -20,6 +21,9 @@ export default {
     },
     removeUserInfo(state) {
       state.userInfo = {}
+    },
+    sethrsaasTime(state, time) {
+      state.hrsaasTime = time
     }
   },
   actions: {
@@ -28,6 +32,7 @@ export default {
     async login({ commit }, data) {
       const res = await login(data)
       // console.log(res)
+      commit('sethrsaasTime', Date.now()) // 当前时间戳
       commit('setToken', res)
     },
     // 通过接口获取用户信息
