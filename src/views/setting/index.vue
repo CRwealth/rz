@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div class="app-container">
     <el-tabs v-model="activeName">
       <el-tab-pane label="角色管理" name="second">
@@ -82,15 +81,10 @@
         </el-form>
       </el-tab-pane>
     </el-tabs>
-=======
-  <div>
-    setting
->>>>>>> 3c19ccb7bb4904a6da4ce928ab39c2b11d0f1ea9
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
 import { getRoleList, deleteRole, getCompanyInfo } from '@/api/setting'
 import roleDialog from './components/roleDialog.vue'
 import { mapGetters } from 'vuex'
@@ -174,23 +168,6 @@ export default {
         console.log(error)
       }
     }
-=======
-export default {
-  name: 'Hrsaas1Index',
-
-  data() {
-    return {
-
-    }
-  },
-
-  mounted() {
-
-  },
-
-  methods: {
-
->>>>>>> 3c19ccb7bb4904a6da4ce928ab39c2b11d0f1ea9
   }
 }
 </script>
