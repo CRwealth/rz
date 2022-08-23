@@ -47,7 +47,7 @@
     <el-row slot="footer" type="flex" justify="center">
       <!-- 列被分为24 -->
       <el-col :span="6">
-        <el-button type="primary" size="small">确定</el-button>
+        <el-button type="primary" size="small" @click="submitDept">确定</el-button>
         <el-button size="small" @click="handleClose">取消</el-button>
       </el-col>
     </el-row>
@@ -59,7 +59,7 @@
 // 部门编码（code）：必填 1-50个字符 / 部门编码在整个模块中都不允许重复
 // 部门负责人（manager）：必填
 // 部门介绍 ( introduce)：必填 1-300个字符
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 
 export default {
@@ -142,6 +142,18 @@ export default {
     },
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
+    },
+    submitDept() {
+      this.$refs.deptForm.validate(async vali => {
+        if (vali) {
+          // 表单校验通过
+          // 新增部门接口
+          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          this.$message.success('新增成功')
+          this.$emit('refreshDepts') // 告诉父组件，刷新列表
+          this.handleClose()
+        }
+      })
     }
   }
 }

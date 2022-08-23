@@ -16,7 +16,7 @@
         </el-tree>
 
       </el-card>
-      <add-dept :dialog-visible.sync="dialogVisible" :tree-node="currentNode" />
+      <add-dept :dialog-visible.sync="dialogVisible" :tree-node="currentNode" @refreshDepts="getDepartments" />
     </div>
 
   </div>
