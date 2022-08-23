@@ -49,6 +49,7 @@ export default {
         this.$emit('addDepts', this.treeNode)
       } else if (type === 'edit') { // 编辑部门
         // 编辑
+        this.$emit('editDept', this.treeNode)
       } else {
         // 删除
       }

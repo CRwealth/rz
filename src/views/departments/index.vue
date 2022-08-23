@@ -11,12 +11,12 @@
           <!-- 说明el-tree里面的这个内容 就是插槽内容 => 填坑内容  => 有多少个节点循环多少次 -->
           <!-- scope-scope 是 tree组件传给每个节点的插槽的内容的数据 -->
           <!-- 顺序一定是 执行slot-scope的赋值 才去执行 props的传值 -->
-          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDept" />
+          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDept" @editDept="editDept" />
 
         </el-tree>
 
       </el-card>
-      <add-dept :dialog-visible.sync="dialogVisible" :tree-node="currentNode" @refreshDepts="getDepartments" />
+      <add-dept ref="addDept" :dialog-visible.sync="dialogVisible" :tree-node="currentNode" @refreshDepts="getDepartments" />
     </div>
 
   </div>
@@ -66,6 +66,12 @@ export default {
     addDept(node) {
       this.currentNode = node // 保存当前的节点
       this.dialogVisible = true // 弹窗显示出来
+    },
+    editDept(node) {
+      this.currentNode = node // 保存当前的节点
+      this.dialogVisible = true // 弹窗显示出来
+      // console.log(node);
+      this.$refs.addDept.formData = { ...node }
     }
   }
 }
