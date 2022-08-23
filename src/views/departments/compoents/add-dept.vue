@@ -1,6 +1,6 @@
 <template>
   <!-- 新增部门的弹层 -->
-  <el-dialog title="新增部门" :visible.sync="dialogVisible" :before-close="handleClose">
+  <el-dialog :title="showTitle" :visible.sync="dialogVisible" :before-close="handleClose">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
     <el-form
@@ -59,7 +59,7 @@
 // 部门编码（code）：必填 1-50个字符 / 部门编码在整个模块中都不允许重复
 // 部门负责人（manager）：必填
 // 部门介绍 ( introduce)：必填 1-300个字符
-import { getDepartments, addDepartments } from '@/api/departments'
+import { getDepartments, addDepartments, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 
 export default {
@@ -78,7 +78,19 @@ export default {
       const { depts } = await getDepartments()
       // console.log(depts)
       // some 只要一个满足条件就返回 true
-      const isRepeat = depts.some(ele => ele.code === value)
+
+      // 1.新增的情况
+      // 2.编辑的情况
+      // 把我自身这条数据给过滤再去判断
+      // 如何把当前这条数据排除掉
+      let isRepeat = false
+      if (this.formData.id) {
+        // const list = depts.filter(ele => ele.id !== this.treeNode.id)
+        isRepeat = depts.some(ele => ele.id !== this.treeNode.id && ele.code === value)
+      } else {
+        isRepeat = depts.some(ele => ele.code === value)
+      }
+
       isRepeat ? callback(new Error(`部门编码${value}已经存在`)) : callback()
     }
     const checkNameRepeat = async(rules, value, callback) => {
@@ -87,12 +99,26 @@ export default {
       // console.log(this.treeNode)
       // 如何判断是否是自己的子部门 就是当前部门的id等于子部门的pid 那么就是属于当前部门的子部门
       // 用 当前节点的ID 判断  === 子部门的pid 如果相等 就是当前部门的子部门 然后返回子部门
-      const list = depts.filter(ele => this.treeNode.id === ele.pid)
+      // const list = depts.filter(ele => this.treeNode.id === ele.pid)
       // console.log(list)
       // 开始判断 子部门的名称是否和输入的value值相等
-      const isRepeat = list.some(ele => ele.name === value)
+      // const isRepeat = list.some(ele => ele.name === value)
       // 如果相等返回true 那么就验证不通过 如果为false说明验证通过
-      isRepeat ? callback(new Error(`部门名称${value}已经存在`)) : callback()
+      let isRepeat = false
+      // 编辑的时候 改的就是自己 要注意和自己的兄弟进行对比 ==》同级的比较
+      // 如何找到和我同级的数据 this.treeNode.pid =1 自己的兄弟 数据pid =1
+      if (this.formData.id) { // 编辑
+      // 所有和我同级的数据
+        const list = depts.filter(ele => this.treeNode.id !== ele.id && this.treeNode.pid === ele.pid)
+        // console.log('list',list);
+        isRepeat = list.some(ele => ele.name === value)
+      } else {
+        // 拿到同级部门的数据
+        // 确定了当前部门的ID ==> 这个部门下所有的子部门
+        const list = depts.filter(ele => this.treeNode.id === ele.pid)
+        isRepeat = list.some(ele => ele.name === value)
+      }
+      isRepeat ? callback(new Error(`部门名称在同级部门${value}已经存在`)) : callback()
     }
     return {
       formData: {
@@ -123,6 +149,11 @@ export default {
       peoples: []
     }
   },
+  computed: {
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增部门'
+    }
+  },
   created() {
     this.getEmployeeSimple()
   },
@@ -148,8 +179,13 @@ export default {
         if (vali) {
           // 表单校验通过
           // 新增部门接口
-          await addDepartments({ ...this.formData, pid: this.treeNode.id })
-          this.$message.success('新增成功')
+          if (this.formData.id) {
+            await updateDepartments(this.formData)
+          } else {
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
+
+          this.$message.success(`部门${this.formData.id ? '修改' : '新增'}成功`)
           this.$emit('refreshDepts') // 告诉父组件，刷新列表
           this.handleClose()
         }

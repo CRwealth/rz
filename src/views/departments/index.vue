@@ -7,11 +7,11 @@
         <!-- 缺少treeNode -->
         <treeTools :tree-node="company" :is-root="false" @addDepts="addDept" />
         <!--放置一个属性   这里的props和我们之前学习的父传子 的props没关系-->
-        <el-tree :data="departs" :props="defaultProps" default-expand-all>
+        <el-tree v-loading="loading" :data="departs" :props="defaultProps" default-expand-all>
           <!-- 说明el-tree里面的这个内容 就是插槽内容 => 填坑内容  => 有多少个节点循环多少次 -->
           <!-- scope-scope 是 tree组件传给每个节点的插槽的内容的数据 -->
           <!-- 顺序一定是 执行slot-scope的赋值 才去执行 props的传值 -->
-          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDept" @editDept="editDept" />
+          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDept" @editDept="editDept" @refreshDepts="getDepartments" />
 
         </el-tree>
 
@@ -43,7 +43,8 @@ export default {
       },
       company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' },
       dialogVisible: false,
-      currentNode: {}
+      currentNode: {},
+      loading: false
     }
     // 点击子部门 弹出弹框
   },
@@ -57,11 +58,14 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.loading = true
+
       const result = await getDepartments()
 
       this.company = { name: result.companyName, manager: result.companyManage, id: '' }
       this.departs = tranListToTreeData(result.depts, '')
       // console.log(result)
+      this.loading = false
     },
     addDept(node) {
       this.currentNode = node // 保存当前的节点
