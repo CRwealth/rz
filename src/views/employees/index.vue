@@ -11,8 +11,13 @@
     <!-- 放置表格和分页 -->
     <el-card>
       <el-table v-loading="loading" border :data="list">
-        <el-table-column label="序号" sortable="" type="index" />
+        <el-table-column label="序号" sortable="" type="index" width="" />
         <el-table-column label="姓名" sortable="" prop="username" />
+        <el-table-column label="头像">
+          <template slot-scope="{row}">
+            <img v-imgerror="require('@/assets/common/bigUserHeader.png')" :src="row.staffPhoto" alt="" style="border-radius:50%;width:100px;height:100px;padding:10px" @click="showErCodeDialog(row.staffPhoto)">
+          </template>
+        </el-table-column>
         <el-table-column label="工号" sortable="" prop="workNumber" />
         <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" :formatter="formatEmployment" />
         <el-table-column label="部门" sortable="" prop="departmentName" />
@@ -29,7 +34,7 @@
         </el-table-column>
         <el-table-column label="操作" sortable="" fixed="right" width="280">
           <template slot-scope="{row}">
-            <el-button type="text" size="small">查看</el-button>
+            <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
@@ -55,7 +60,11 @@
     </el-card>
     <!-- .sync ::visible-dialog="visibleDialog" 和 @updata:visibleDialog="把子组件
     传递过来的值 赋值给 visibleDialog " -->
-    <AddDemployee :visible-dialog.sync="visibleDialog" @refresh="getEmployeeList" /></div>
+    <AddDemployee :visible-dialog.sync="visibleDialog" @refresh="getEmployeeList" />
+    <el-dialog title="头像二维码" :visible.sync="ercodeDialog" custom-class="canvaseq">
+      <canvas id="canvas" />
+    </el-dialog>
+  </div>
 
 </template>
 
@@ -64,6 +73,7 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 import AddDemployee from './components/add-employee'
 import { formatDate } from '@/filters'
+import QrCode from 'qrcode'
 export default {
   components: {
     AddDemployee
@@ -71,6 +81,7 @@ export default {
   data() {
     return {
       visibleDialog: false,
+      ercodeDialog: false,
       // EmployeeEnum,
       loading: false,
       list: [], // 接数据的
@@ -183,13 +194,22 @@ export default {
         })
       })
       return result
+    },
+    async showErCodeDialog(staffPhoto) {
+      // staffPhoto 地址存在的时候
+      if (!staffPhoto) return this.$message.error('该用户还未设置头像')
+      this.ercodeDialog = true
+      await this.$nextTick()
+      const dom = document.querySelector('#canvas')
+      QrCode.toCanvas(dom, staffPhoto)
     }
-
   }
 }
 
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.canvaseq .el-dialog__body {
+  text-align: center;
+}
 </style>

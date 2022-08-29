@@ -1,7 +1,8 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <UploadExcel />
+    <UploadImg :before-upload-check="beforeUploadCheck" @onSuccess="handleSuccess" />
+    <!-- <UploadExcel /> -->
     <!-- <a
       href="http://localhost:8888/static/img/login-logo.758b34e9.png"
       download="login-logo.758b34e9.png"
@@ -60,6 +61,15 @@ export default {
     //     bookType: 'xlsx' // 非必填
     //   })
     // })
+  },
+  methods: {
+    beforeUploadCheck(file) {
+      this.$message.error('文件大小不超过1Mb')
+      return false
+    },
+    handleSuccess({ url }) {
+      console.log(url)
+    }
   }
 
 }
