@@ -27,7 +27,6 @@ import treeTools from './compoents/tree-tools.vue'
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils/index'
 import AddDept from './compoents/add-dept.vue' // 引入新增部门组件
-
 export default {
   name: 'Hrsaas1Index',
   components: {

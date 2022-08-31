@@ -35,6 +35,10 @@ export default {
     showIcon: {
       type: Boolean,
       default: true
+    },
+    showBefore: {
+      type: Boolean,
+      default: true
     }
   }
 }
