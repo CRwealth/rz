@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+
     <PageTools :show-before="true">
       <span slot="before">{{ total }}条数据</span>
       <template slot="after">
@@ -38,7 +39,7 @@
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
-            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="asRole(row)">角色</el-button>
             <el-button type="text" size="small" @click="del(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -64,6 +65,7 @@
     <el-dialog title="头像二维码" :visible.sync="ercodeDialog" custom-class="canvaseq">
       <canvas id="canvas" />
     </el-dialog>
+    <HrsaasAssignRole ref="assiginRole" v-model="assignRoleVisible" :user-id="currentUserId" />
   </div>
 
 </template>
@@ -74,14 +76,18 @@ import EmployeeEnum from '@/api/constant/employees'
 import AddDemployee from './components/add-employee'
 import { formatDate } from '@/filters'
 import QrCode from 'qrcode'
+import HrsaasAssignRole from './components/assign-role.vue'
 export default {
   components: {
-    AddDemployee
+    AddDemployee,
+    HrsaasAssignRole
   },
   data() {
     return {
       visibleDialog: false,
       ercodeDialog: false,
+      assignRoleVisible: false,
+      currentUserId: '',
       // EmployeeEnum,
       loading: false,
       list: [], // 接数据的
@@ -202,6 +208,11 @@ export default {
       await this.$nextTick()
       const dom = document.querySelector('#canvas')
       QrCode.toCanvas(dom, staffPhoto)
+    },
+    async asRole(row) {
+      this.currentUserId = row.id
+      await this.$refs.assiginRole.getRoleList()
+      this.assignRoleVisible = true
     }
   }
 }

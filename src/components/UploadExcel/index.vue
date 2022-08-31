@@ -140,10 +140,10 @@ export default {
   display: flex;
   justify-content: center;
    margin-top: 100px;
-   .excel-upload-input{
-       display: none;
-        z-index: -9999;
-     }
+    .excel-upload-input{
+        display: none;
+          z-index: -9999;
+      }
    .btn-upload , .drop{
       border: 1px dashed #bbb;
       width: 350px;
