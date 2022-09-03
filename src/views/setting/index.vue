@@ -3,42 +3,18 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="角色管理" name="second">
         <el-row style="height:60px">
-          <el-button
-            icon="el-icon-plus"
-            size="small"
-            type="primary"
-            @click="handleAdd"
-          >新增角色</el-button>
+          <el-button icon="el-icon-plus" size="small" type="primary" @click="handleAdd">新增角色</el-button>
           <!-- - sync 拆分成 dialogVisible属性 和 update:dialogVisible事件-->
           <!-- roleDialog :dialog-visible='dialogVisible' @update:dialogVisible="接收子组件传递过来的值 改变dialogVisible的值" -->
           <roleDialog ref="roleDialog" :dialog-visible.sync="dialogVisible" @refresh="getRoleList" />
         </el-row>
-        <el-table
-          v-loading="loading"
-          border
-          :data="list"
-          style="width: 100%"
-        >
-          <el-table-column
-            type="index"
-            label="序号"
-            width="80"
-          />
-          <el-table-column
-            prop="name"
-            label="角色名称"
-            width="180"
-          />
-          <el-table-column
-            prop="description"
-            label="描述"
-          />
-          <el-table-column
-            label="操作"
-            width="320"
-          >
+        <el-table v-loading="loading" border :data="list" style="width: 100%">
+          <el-table-column type="index" label="序号" width="80" />
+          <el-table-column prop="name" label="角色名称" width="180" />
+          <el-table-column prop="description" label="描述" />
+          <el-table-column label="操作" width="320">
             <template slot-scope="scope">
-              <el-button type="success" size="medium">分配权限</el-button>
+              <el-button type="success" size="medium" @click="authority(scope.row)">分配权限</el-button>
               <el-button type="primary" size="medium" @click="edit(scope.row)">编辑</el-button>
               <el-button type="danger" size="medium" @click="deleteRole(scope.row.id)">删除</el-button>
             </template>
@@ -76,11 +52,18 @@
             <el-input v-model="formData.mailbox" disabled style="width:400px" />
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-model="formData.remarks" type="textarea" :rows="3" disabled style="width:400px" />
+            <el-input
+              v-model="formData.remarks"
+              type="textarea"
+              :rows="3"
+              disabled
+              style="width:400px"
+            />
           </el-form-item>
         </el-form>
       </el-tab-pane>
     </el-tabs>
+    <managerPermission ref="managerPermission" :dialogvisible.sync="dialogVisibleee" />
   </div>
 </template>
 
@@ -88,10 +71,12 @@
 import { getRoleList, deleteRole, getCompanyInfo } from '@/api/setting'
 import roleDialog from './components/roleDialog.vue'
 import { mapGetters } from 'vuex'
+import managerPermission from './components/manager-permission.vue'
 export default {
   name: 'Hrsaas1Index',
   components: {
-    roleDialog
+    roleDialog,
+    managerPermission,
   },
 
   data() {
@@ -99,17 +84,18 @@ export default {
       activeName: 'second',
       page: {
         page: 1,
-        pagesize: 10
+        pagesize: 10,
       },
       list: [],
       total: 0,
       loading: false,
       dialogVisible: false,
-      formData: ''
+      formData: '',
+      dialogVisibleee: false,
     }
   },
   computed: {
-    ...mapGetters(['companyId'])
+    ...mapGetters(['companyId']),
   },
   mounted() {
     this.getRoleList()
@@ -149,7 +135,7 @@ export default {
       try {
         await this.$confirm('确认删除该角色吗', '删除提示', {
           cancelButtonText: '取消',
-          confirmButtonText: '确定'
+          confirmButtonText: '确定',
         })
         // 只有点击了确定 才能进入到下方
         await deleteRole(id) // 调用删除接口
@@ -167,11 +153,14 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    }
-  }
+    },
+    async authority(row) {
+      await this.$refs.managerPermission.getPermissionList(row.id)
+      this.dialogVisibleee = true
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

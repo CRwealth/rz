@@ -15,7 +15,12 @@
         <el-table-column align="center" label="描述" prop="description" />
         <el-table-column align="left" label="操作">
           <template slot-scope="{row}">
-            <el-button v-if="row.type*1 ===1" type="text" icon="el-icon-circle-plus-outline" @click="addTj(row.id,2)">添加</el-button>
+            <el-button
+              v-if="row.type*1 ===1"
+              type="text"
+              icon="el-icon-circle-plus-outline"
+              @click="addTj(row.id,2)"
+            >添加</el-button>
             <el-button type="text" icon="el-icon-edit" @click="edit(row)">编辑</el-button>
             <el-button type="text" icon="el-icon-delete" style="color:red" @click="del(row.id)">删除</el-button>
           </template>
@@ -37,7 +42,7 @@ export default {
     return {
       loading: false,
       perList: [],
-      dialogVisible: false
+      dialogVisible: false,
     }
   },
 
@@ -60,7 +65,7 @@ export default {
     async del(id) {
       try {
         await this.$confirm('确定删除吗', '提示', {
-          type: 'warnings'
+          type: 'warnings',
         })
         // 删除接口
         await delPermission(id)
@@ -78,11 +83,10 @@ export default {
     edit(row) {
       this.$refs.addPermission.formData = { ...row }
       this.dialogVisible = true
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

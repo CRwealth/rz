@@ -17,7 +17,9 @@ router.beforeEach(async(to, from, next) => {
     // userinfo userId
     // !store.state.user.userInfo.userId
     if (!store.getters.userId) {
-      await store.dispatch('user/getUserInfo')
+      const {roles:{ menus }} = await store.dispatch('user/getUserInfo')
+      store.dispatch('permission/filterRoutes',menus)
+      next(to.path)
     }
     // 当前去往页面是不是 登录页 是的话就处在当前页  否则直接放行
     if (to.path === '/login') {

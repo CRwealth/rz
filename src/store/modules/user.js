@@ -1,5 +1,6 @@
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { setToken, getToken, removeToken } from '@/utils//auth'
+import {resetRouter} from '@/router'
 export default {
   namespaced: true,
   state: {
@@ -47,10 +48,14 @@ export default {
       // 直接log不出来，要去首页调用一下
       // console.log(res)
       commit('setUserInfo', baseResult)
+      return baseResult
     },
     logout({ commit }) {
       commit('removeToken')
       commit('removeUserInfo')
+      resetRouter()
+      // 在模块内部 是不可以 触发全局
+      commit('permission/setRouter',[],{root:true})
     }
   }
 }

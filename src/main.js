@@ -22,8 +22,11 @@ import * as directives from '@/directives'
 import Component from '@/components'
 
 import Print from 'vue-print-nb'
-Vue.use(Print)
 
+import myMixin from '@/mixin/checkPermission'
+Vue.mixin(myMixin)
+
+Vue.use(Print)
 Vue.use(Component) // 注册自己的插件
 
 Object.keys(directives).forEach(key => {
