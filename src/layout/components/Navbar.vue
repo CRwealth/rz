@@ -1,6 +1,10 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <!-- <breadcrumb class="breadcrumb-container" /> -->
     <div class="app-breadcrumb">
@@ -9,14 +13,13 @@
     </div>
 
     <div class="right-menu">
+      <Lang style="margin-right:20px"></Lang>
+      <ScreenFull style="margin-right:20px"></ScreenFull>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <!-- 如果图片加载不出来会有onerror事件 -->
-          <img
-            v-imgerror="defaultImg"
-            :src="staffPhoto"
-            class="user-avatar"
-          >
+          <img v-imgerror="defaultImg" :src="staffPhoto" class="user-avatar" />
           <span>{{ username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -42,20 +45,15 @@ import defaultImg from '@/assets/common/head.jpg'
 export default {
   components: {
     // Breadcrumb,
-    Hamburger
+    Hamburger,
   },
   data() {
     return {
-      defaultImg
+      defaultImg,
     }
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar',
-      'username',
-      'staffPhoto'
-    ])
+    ...mapGetters(['sidebar', 'avatar', 'username', 'staffPhoto']),
   },
 
   methods: {
@@ -65,49 +63,48 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login`)
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
-.app-breadcrumb {
-  display: inline-block;
-  font-size: 18px;
-  line-height: 50px;
-  margin-left: 10px;
-  color: #ffffff;
-  cursor: text;
-  .breadBtn {
-    background: #84a9fe;
-    font-size: 14px;
-    padding: 0 10px;
+  .app-breadcrumb {
     display: inline-block;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 10px;
-    margin-left: 15px;
+    font-size: 18px;
+    line-height: 50px;
+    margin-left: 10px;
+    color: #ffffff;
+    cursor: text;
+    .breadBtn {
+      background: #84a9fe;
+      font-size: 14px;
+      padding: 0 10px;
+      display: inline-block;
+      height: 30px;
+      line-height: 30px;
+      border-radius: 10px;
+      margin-left: 15px;
+    }
   }
-}
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
     color: #ffffff;
     fill: currentColor;
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -119,7 +116,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    display: flex;
     &:focus {
       outline: none;
     }
@@ -134,10 +131,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }
@@ -166,30 +163,30 @@ export default {
       }
     }
   }
-   .avatar-container {
-      margin-right: 30px;
-      .avatar-wrapper {
-        position: relative;
-        // 开启flex
-        display: flex;
-        align-items: center;
-        color: #fff;
+  .avatar-container {
+    margin-right: 30px;
+    .avatar-wrapper {
+      position: relative;
+      // 开启flex
+      display: flex;
+      align-items: center;
+      color: #fff;
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-          margin-right: 8px;
-        }
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 18px;
-          font-size: 12px;
-        }
+      .user-avatar {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        margin-right: 8px;
+      }
+      .el-icon-caret-bottom {
+        cursor: pointer;
+        position: absolute;
+        right: -20px;
+        top: 18px;
+        font-size: 12px;
       }
     }
+  }
 }
 </style>

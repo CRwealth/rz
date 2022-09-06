@@ -14,6 +14,7 @@
 // }
 
 // require.context(路径，是否查看子目录，正则) ==》返回一个函数
+
 const requireComponent = require.context('./', true, /\.vue$/)
 const res = requireComponent.keys().map(requireComponent)
 

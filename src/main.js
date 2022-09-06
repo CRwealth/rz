@@ -23,8 +23,15 @@ import Component from '@/components'
 
 import Print from 'vue-print-nb'
 
+import i18n from '@/lang'
+
 import myMixin from '@/mixin/checkPermission'
 Vue.mixin(myMixin)
+
+// 设置element为当前的语言
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 
 Vue.use(Print)
 Vue.use(Component) // 注册自己的插件
@@ -55,7 +62,7 @@ Object.keys(filters).forEach(key => {
 
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
@@ -65,5 +72,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
